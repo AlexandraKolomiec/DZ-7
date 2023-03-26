@@ -1,0 +1,56 @@
+""" 
+    Напишите функцию, которая получает на вход директорию и рекурсивно обходит её и все вложенные директории. 
+    Результаты обхода сохраните в файлы json, csv и pickle.
+-   Для дочерних объектов указывайте родительскую директорию. 
+-   Для каждого объекта укажите файл это или директория.
+-   Для файлов сохраните его размер в байтах, а для директорий размер файлов в ней с учётом всех вложенных файлов и директорий.
+"""
+
+import os
+import json
+import csv
+import pickle
+
+way = 'C:\\Users\\alexa\\OneDrive\\Рабочий стол\\Python7'
+
+def rout(way):
+    dir = {}
+    a = os.listdir(way)#результат обхода
+    for i in os.listdir(way):
+        add = []
+        dir[i] = add
+        add.append(way +'\\'+i)
+        # print('Обьект: ', i, 'Родительская директория: ', way +'\\'+i)
+        if os.path.isdir(way +'\\'+i):
+                # размер файлов в директорий с учётом всех вложенных файлов и директорий
+                total_size = 0
+                way, dirs, files = next(os.walk(way))
+                for f in files:
+                    fp = os.path.join(way, f)
+                    total_size += fp.__sizeof__()
+                add.append(f'"Это директория. Размер файлов в директории с учётом всех вложенных файлов и директорий: "{total_size}"Количество подкаталогов: " {len(dirs)} "Количество файлов: ", {len(files)}' )
+                #print('Размер файлов в директории с учётом всех вложенных файлов и директорий: ', total_size)
+                # print('Количество подкаталогов: ', len(dirs), 'Количество файлов: ', len(files))
+           
+            
+        elif os.path.isfile(way +'\\'+i):
+                #сохраните его размер в байтах
+                add.append(f'"Это файл. Размер файла байт: "{i.__sizeof__()}')
+   
+    #json
+    with open('data_dir.json', 'w', encoding='utf-8') as file:
+            file.write(json.dumps(dir, indent=2, ensure_ascii=False))
+        
+    #csv
+    b = str(dir).split('\n')
+    with open('data_dir.csv', 'w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file, dialect='excel', delimiter=' ', quoting=csv.QUOTE_MINIMAL)
+        writer.writerows(b)
+    
+    #pickle
+    with open('data_dir.pickle', 'wb') as f:
+        pickle.dump(dir, f)
+        #print(pickle.loads(b"data_dir.pickle"))
+rout(way)
+
+
