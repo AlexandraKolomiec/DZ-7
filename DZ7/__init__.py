@@ -1,1 +1,1 @@
-__all__ = ['DZseventh1', 'DZ8']
+__all__ = ['DZseventh1', 'DZ8', 'data_dir.csv', 'data_dir.json', 'data_dir.pickle', 'text_one.md']
